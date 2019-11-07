@@ -249,7 +249,7 @@ class SlackTextMessage extends TextMessage
   ###
   channel_list=['C0GR1N60Y','C4WENANJ1','DNU7DR2CV']
   @makeSlackTextMessage: (user, text, rawText, rawMessage, channel_id, robot_name, robot_alias, client, cb) ->
-    if channel_id in channel_list:
+    if channel_id in channel_list
         message = new SlackTextMessage(user, text, rawText, rawMessage, channel_id, robot_name, robot_alias)
 
         # creates a completion function that consistently calls the callback after this function has returned
@@ -260,7 +260,7 @@ class SlackTextMessage extends TextMessage
           done(message)
         else
           done(message)
-     else
+    else
         return "This slack channel is not authorized for accessing the information"
 
 exports.SlackTextMessage = SlackTextMessage
