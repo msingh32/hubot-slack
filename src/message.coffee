@@ -100,6 +100,7 @@ class SlackTextMessage extends TextMessage
   # @param {function} cb - callback for the result
   ###
   buildText: (client, cb) ->
+    channel_list=['C0GR1N60Y','C4WENANJ1','DNU7DR2CV']
     # base text
     text = if @rawMessage.text? then @rawMessage.text else ""
 
@@ -111,28 +112,32 @@ class SlackTextMessage extends TextMessage
     # Replace links in text async to fetch user and channel info (if present)
     mentionFormatting = @replaceLinks(client, text)
     # Fetch conversation info
-    fetchingConversationInfo = client.fetchConversation(@_channel_id)
-    Promise.all([mentionFormatting, fetchingConversationInfo])
-      .then (results) =>
-        [ replacedText, conversationInfo ] = results
-        text = replacedText
-        text = text.replace /&lt;/g, "<"
-        text = text.replace /&gt;/g, ">"
-        text = text.replace /&amp;/g, "&"
+    if @_channel_id in channel_list
+        fetchingConversationInfo = client.fetchConversation(@_channel_id)
+        Promise.all([mentionFormatting, fetchingConversationInfo])
+          .then (results) =>
+            [ replacedText, conversationInfo ] = results
+            text = replacedText
+            text = text.replace /&lt;/g, "<"
+            text = text.replace /&gt;/g, ">"
+            text = text.replace /&amp;/g, "&"
 
-        # special handling for message text when inside a DM conversation
-        if conversationInfo.is_im
-          startOfText = if text.indexOf("@") == 0 then 1 else 0
-          robotIsNamed = text.indexOf(@_robot_name) == startOfText || text.indexOf(@_robot_alias) == startOfText
-          # Assume it was addressed to us even if it wasn't
-          if not robotIsNamed
-            text = "#{@_robot_name} #{text}"     # If this is a DM, pretend it was addressed to us
+            # special handling for message text when inside a DM conversation
+            if conversationInfo.is_im
+              startOfText = if text.indexOf("@") == 0 then 1 else 0
+              robotIsNamed = text.indexOf(@_robot_name) == startOfText || text.indexOf(@_robot_alias) == startOfText
+              # Assume it was addressed to us even if it wasn't
+              if not robotIsNamed
+                text = "#{@_robot_name} #{text}"     # If this is a DM, pretend it was addressed to us
 
-        @text = text
-        cb()
-      .catch (error) =>
-        client.robot.logger.error "An error occurred while building text: #{error.message}"
-        cb(error)
+            @text = text
+            cb()
+          .catch (error) =>
+            client.robot.logger.error "An error occurred while building text: #{error.message}"
+            cb(error)
+  else
+    client.robot.logger.error "This channel id is not listed for communication: #{error.message}"
+            cb(error)
 
   ###*
   # Replace links inside of text
