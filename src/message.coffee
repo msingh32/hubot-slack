@@ -261,7 +261,7 @@ class SlackTextMessage extends TextMessage
         else
           done(message)
     else
-        return "This slack channel is not authorized for accessing the information"
+        done("This slack channel is not authorized for accessing the information")
 
 exports.SlackTextMessage = SlackTextMessage
 exports.ReactionMessage = ReactionMessage
