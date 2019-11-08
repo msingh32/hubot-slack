@@ -2,7 +2,6 @@
 SlackClient             = require "./client"
 SlackMention            = require "./mention"
 Promise                 = require "bluebird"
-channel_list=['C0GR1N60Y','C4WENANJ1','DNU7DR2CV']
 
 class ReactionMessage extends Message
 
@@ -249,19 +248,16 @@ class SlackTextMessage extends TextMessage
   # @param {function} cb - callback to return the result
   ###
   @makeSlackTextMessage: (user, text, rawText, rawMessage, channel_id, robot_name, robot_alias, client, cb) ->
-    if channel_id in channel_list
-        message = new SlackTextMessage(user, text, rawText, rawMessage, channel_id, robot_name, robot_alias)
+    message = new SlackTextMessage(user, text, rawText, rawMessage, channel_id, robot_name, robot_alias)
 
-        # creates a completion function that consistently calls the callback after this function has returned
-        done = (message) -> setImmediate(() -> cb(null, message))
+    # creates a completion function that consistently calls the callback after this function has returned
+    done = (message) -> setImmediate(() -> cb(null, message))
 
-        if not message.text? then message.buildText client, (error) ->
-          return cb(error) if error
-          done(message)
-        else
-          done(message)
+    if not message.text? then message.buildText client, (error) ->
+      return cb(error) if error
+      done(message)
     else
-        return "This slack channel is not authorized for accessing the information"
+      done(message)
 
 exports.SlackTextMessage = SlackTextMessage
 exports.ReactionMessage = ReactionMessage
