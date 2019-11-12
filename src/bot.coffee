@@ -85,6 +85,8 @@ class SlackBot extends Adapter
     for message in messages
       # NOTE: perhaps do envelope manipulation here instead of in the client (separation of concerns)
       @client.send(envelope, message) unless message is ""
+      else
+        @client.send(envelope,"Sorry, It works only iin Test stuff channel")
 
   ###*
   # Hubot is replying to a Slack message
@@ -303,8 +305,7 @@ class SlackBot extends Adapter
       # after it is received. If the reaction is to a message, then the `event.item.channel` contain a conversation ID.
       # Otherwise reactions can be on files and file comments, which are "global" and aren't contained in a
       # conversation. In that situation we fallback to an empty string.
-      if event.channel_id in ['C0GR1N60Y','C4WENANJ1','DNU7DR2CV']
-        user.room = event.channel_id
+      user.room = event.channel_id if event.channel_id in ['C0GR1N60Y','C4WENANJ1','DNU7DR2CV']
 
       @robot.logger.debug "Received file_shared message from: #{user.id}, file_id: #{event.file_id}"
       @receive new FileSharedMessage(user, event.file_id, event.event_ts)
