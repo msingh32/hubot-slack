@@ -85,8 +85,6 @@ class SlackBot extends Adapter
     for message in messages
       # NOTE: perhaps do envelope manipulation here instead of in the client (separation of concerns)
       @client.send(envelope, message) unless message is ""
-      else
-        @client.send(envelope,"Sorry, It works only iin Test stuff channel")
 
   ###*
   # Hubot is replying to a Slack message
