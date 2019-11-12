@@ -100,7 +100,7 @@ class SlackBot extends Adapter
         message = "<@#{envelope.user.id}>: #{message}" unless envelope.room[0] is "D"
         @client.send envelope, message
       else
-        @client.send envelope, "Sorry this command works only in teststuff channel"
+        @client.send "Sorry this command works only in teststuff channel"
 
   ###*
   # Hubot is setting the Slack conversation topic
