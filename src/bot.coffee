@@ -99,8 +99,7 @@ class SlackBot extends Adapter
         # TODO: channel prefix matching should be removed
         message = "<@#{envelope.user.id}>: #{message}" unless envelope.room[0] is "D"
         @client.send envelope, message
-      else
-        @client.send "Sorry this command works only in teststuff channel"
+
 
   ###*
   # Hubot is setting the Slack conversation topic
@@ -305,7 +304,7 @@ class SlackBot extends Adapter
       # after it is received. If the reaction is to a message, then the `event.item.channel` contain a conversation ID.
       # Otherwise reactions can be on files and file comments, which are "global" and aren't contained in a
       # conversation. In that situation we fallback to an empty string.
-      user.room = event.channel_id if event.channel_id in ['C0GR1N60Y','C4WENANJ1','DNU7DR2CV']
+      user.room = event.channel_id if event.channel_id in ['C0GR1N60Y','C4WENANJ1','DNU7DR2CV'] else "Sorry this command works only in teststuff channel"
 
       @robot.logger.debug "Received file_shared message from: #{user.id}, file_id: #{event.file_id}"
       @receive new FileSharedMessage(user, event.file_id, event.event_ts)
